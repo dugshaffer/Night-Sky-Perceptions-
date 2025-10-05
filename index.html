@@ -45,6 +45,50 @@
             requestAnimationFrame(draw);
         }
         draw();
-    </script>
+<script>
+    let c = document.getElementById('sky');
+    let ctx = c.getContext('2d');
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+    let objects = [];
+    for (let i = 0; i < 50; i++) {
+        objects.push({
+            x: Math.random() * c.width,
+            y: Math.random() * c.height,
+            speed: Math.random() * 0.5 + 0.1,
+            color: 'white'
+        });
+    }
+    let plane = {
+        x: c.width / 2,
+        y: c.height / 2,
+        speed: 0.1, // Slow approach
+        color: 'red'
+    };
+    let t = 0;
+    function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, c.width, c.height);
+        for (let o of objects) {
+            ctx.fillStyle = o.color;
+            ctx.fillRect(o.x, o.y, 1, 1);
+            o.x += o.speed;
+            if (o.x > c.width) o.x = 0;
+        }
+        // Plane coming at you
+        let px = c.width / 2 + Math.sin(t * 0.01) * 200; // Oscillates toward center
+        let py = c.height / 2 + Math.cos(t * 0.01) * 100; // Up-down motion
+        ctx.fillStyle = plane.color;
+        ctx.fillRect(px, py, 3, 3);
+        // UFO zip after 200 frames
+        if (t > 200) {
+            px += (t - 200) * 2; // Accelerate right
+            py -= (t - 200) * 0.5; // Slight upward
+        }
+        t++;
+        requestAnimationFrame(draw);
+    }
+    draw();
+</script>
 </body>
 </html>
